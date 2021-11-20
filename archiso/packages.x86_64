@@ -126,8 +126,8 @@ zsh
 ###             VIA CALAMARES CONFIG                ###
 #######################################################
 
-stalker-calamares
-stalker-calamares-config
+#stalker-calamares
+#stalker-calamares-config
 stalker-welcome
 
 #################################
@@ -216,7 +216,7 @@ gtop
 htop
 libxinerama
 linux-headers
-lxdm-gtk3
+sddm
 make
 polybar
 xdg-utils
@@ -322,6 +322,6 @@ ksuperkey
 networkmanager-dmenu-git
 paru-bin
 shell-color-scripts
-tty-clock
+#tty-clock
 unimatrix-git
 xfce-polkit
