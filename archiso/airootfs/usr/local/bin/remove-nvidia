@@ -1,6 +1,6 @@
 #!/bin/bash
 # driver=free or driver=nonfree - grub and efi
-echo "Start stalker-remove-nvidia"
+echo "Start zone-remove-nvidia"
 kernel_cmdline(){
         cmline=$(cat /proc/cmdline)
 	for param in $cmline; do
@@ -118,5 +118,5 @@ if [[ $selection == "none" ]]; then
 fi
 
 echo "#################################"
-echo "End stalker-remove-nvidia"
+echo "End zone-remove-nvidia"
 echo "#################################"

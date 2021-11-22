@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 echo "#################################"
-echo "Start stalker-before"
+echo "Start zone-before"
 echo "#################################"
 
 echo "Changing into our own linux.preset"
 echo "#################################"
-mv /etc/mkinitcpio.d/stalker /etc/mkinitcpio.d/linux.preset
+mv /etc/mkinitcpio.d/zone /etc/mkinitcpio.d/linux.preset
 
 echo "Populate Core Team keys"
 echo "#################################"
@@ -13,6 +13,6 @@ pacman-key --init
 pacman-key --populate
 
 echo "#################################"
-echo "End stalker-before"
+echo "End zone-before"
 echo "#################################"
-rm /usr/local/bin/stalker-before
+rm /usr/local/bin/zone-before

@@ -4,6 +4,6 @@ if wget -q --tries=10 --timeout=20 --spider https://github.com; then
     bspc rule -a calamares state=floating follow=on focus=on
     devour sudo -E calamares
 else
-    notify-send -a "S.T.A.L.K.E.R. OS Installer" -t 10000 "Installer cannot continue without an internet connection."
+    notify-send -a "Zone Installer" -t 10000 "Installer cannot continue without an internet connection."
 fi
 

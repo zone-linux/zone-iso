@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="stalker"
-iso_label="stalker_$(date +%Y%m)"
-iso_publisher="S.T.A.L.K.E.R. <https://github.com/stalker-os>"
-iso_application="S.T.A.L.K.E.R. Live/Rescue CD"
+iso_name="zone"
+iso_label="zone_$(date +%Y%m)"
+iso_publisher="zone <https://github.com/zone-linux>"
+iso_application="zone Live/Rescue CD"
 iso_version="$(date +%Y.%m.%d)"
 install_dir="arch"
 buildmodes=('iso')
@@ -22,7 +22,7 @@ file_permissions=(
   ["/usr/local/bin/choose-mirror"]="0:0:755"
   ["/usr/local/bin/calinstall"]="0:0:755"
   ["/usr/local/bin/calinstall-debug"]="0:0:755"
-  ["/usr/local/bin/stalker-before"]="0:0:755"
-  ["/usr/local/bin/stalker-final"]="0:0:755"
+  ["/usr/local/bin/zone-before"]="0:0:755"
+  ["/usr/local/bin/zone-final"]="0:0:755"
   ["/usr/local/bin/remove-nvidia"]="0:0:755"
 )

@@ -126,22 +126,23 @@ zsh
 ###             VIA CALAMARES CONFIG                ###
 #######################################################
 
-stalker-calamares
-stalker-calamares-config
-stalker-welcome
+zone-calamares
+zone-calamares-config
+zone-welcome
 
 #################################
 #### S.T.A.L.K.E.R. Packages ####
 #################################
-stalker-release
-stalker-bspwm
-stalker-dmenu
-stalker-fonts
-stalker-grub-theme
-stalker-nvim
-stalker-scripts
-stalker-skeleton
-stalker-vim
+zone-release
+zone-bspwm
+zone-dmenu
+zone-fonts
+zone-grub-theme
+zone-nvim
+zone-scripts
+zone-skeleton
+zone-vim
+zone-wallpapers
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -297,6 +298,7 @@ xdg-user-dirs
 ################
 feh
 imagemagick
+nitrogen
 viewnior
 
 ####################

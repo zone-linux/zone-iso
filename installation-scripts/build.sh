@@ -21,8 +21,8 @@ echo
 
 	# setting of the general parameters
 	archisoRequiredVersion="archiso 58-2"
-	buildFolder=$HOME"/Stalker-Build"
-	outFolder=$HOME"/Stalker-Iso"
+	buildFolder=$HOME"/Zone-Build"
+	outFolder=$HOME"/Zone-Iso"
 	archisoVersion=$(sudo pacman -Q archiso)
 
 	echo "################################################################## "
@@ -292,7 +292,7 @@ tput sgr0
 echo "################################################################## "
 echo
 
-if [[ -f "$HOME/Stalker-Iso/stalker-$(date +%Y.%m.%d)-x86_64.iso" ]]; then
+if [[ -f "$HOME/Zone-Iso/zone-$(date +%Y.%m.%d)-x86_64.iso" ]]; then
   pdir=$(dirname "$PWD")
-  notify-send -a "Build Stalker iso" -t 10000 "Stalker Iso has finished building..." --icon="$pdir/archiso/airootfs/usr/share/stalker.png"
+  notify-send -a "Build Zone iso" -t 10000 "Zone Iso has finished building..." --icon="$pdir/archiso/airootfs/usr/share/zone.png"
 fi
