@@ -137,6 +137,7 @@ zone-release
 zone-bspwm
 zone-dmenu
 zone-fonts
+zone-lxdm-theme
 zone-grub-theme
 zone-nvim
 zone-scripts
@@ -217,7 +218,7 @@ gtop
 htop
 libxinerama
 linux-headers
-sddm
+lxdm-gtk3
 make
 polybar
 xdg-utils
