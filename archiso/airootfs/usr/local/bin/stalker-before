@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+echo "#################################"
+echo "Start stalker-before"
+echo "#################################"
+
+echo "Changing into our own linux.preset"
+echo "#################################"
+mv /etc/mkinitcpio.d/stalker /etc/mkinitcpio.d/linux.preset
+
+echo "Populate Core Team keys"
+echo "#################################"
+pacman-key --init
+pacman-key --populate
+
+echo "#################################"
+echo "End stalker-before"
+echo "#################################"
+rm /usr/local/bin/stalker-before
