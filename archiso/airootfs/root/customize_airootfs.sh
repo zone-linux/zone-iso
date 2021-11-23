@@ -9,5 +9,5 @@ if [[ ! -d "$rootdir" ]]; then mkdir -p "$rootdir"; fi
 declare -a rootdots=('.local' '.gtkrc-2.0' '.vim_runtime' '.vimrc')
 for dfile in "${rootdots[@]}"; do if [[ -e "$skeldir/$dfile" ]]; then cp -rf "$skeldir"/"$dfile" /root; fi done
 
-declare -a rootconfig=(i3 geany gtk-3.0 Kvantum neofetch nvim qt5ct ranger Thunar fish)
+declare -a rootconfig=(xfce4 autostart dconf dunst ulauncher geany gtk-3.0 Kvantum neofetch nvim qt5ct ranger Thunar)
 for cfg in "${rootconfig[@]}"; do if [[ -e "$skeldir/.config/$cfg" ]]; then cp -rf "$skeldir"/.config/"$cfg" "$rootdir"; fi done
