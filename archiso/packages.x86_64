@@ -175,8 +175,8 @@ sxhkd
 udiskie
 unzip
 xclip
-xfce4-power-manager
-xfce4-settings
+xfce4
+xfce4-goodies
 
 #######################################
 #### AMD/Intel/VM Graphics Drivers ####
@@ -203,11 +203,9 @@ virtualbox-guest-utils
 ###############
 #### Other ####
 ###############
-alacritty
 archlinux-keyring
 base-devel
 cowfortune
-fish
 gpick
 gtop
 htop
@@ -217,7 +215,6 @@ lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 make
-polybar
 xdg-utils
 xdotool
 
@@ -316,12 +313,8 @@ vim
 ######################
 cava
 devour
-i3lock-color
-j4-dmenu-desktop
-ksuperkey
-networkmanager-dmenu-git
 paru-bin
 shell-color-scripts
-#tty-clock
+ulauncher
 unimatrix-git
 xfce-polkit
