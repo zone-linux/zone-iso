@@ -134,14 +134,9 @@ zone-welcome
 #### S.T.A.L.K.E.R. Packages ####
 #################################
 zone-release
-zone-bspwm
-zone-dmenu
-zone-fonts
-zone-lxdm-theme
+zone-xfce
 zone-grub-theme
 zone-nvim
-zone-scripts
-zone-skeleton
 zone-vim
 zone-wallpapers
 
@@ -218,7 +213,9 @@ gtop
 htop
 libxinerama
 linux-headers
-lxdm-gtk3
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
 make
 polybar
 xdg-utils
