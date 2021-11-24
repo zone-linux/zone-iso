@@ -38,7 +38,6 @@ gnu-netcat
 gpart
 gpm
 gptfdisk
-grml-zsh-config
 hdparm
 intel-ucode
 ipw2100-fw
@@ -135,10 +134,12 @@ zone-welcome
 #################################
 zone-release
 zone-xfce
+zone-fonts
 zone-grub-theme
 zone-nvim
 zone-vim
 zone-wallpapers
+zone-music
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -164,11 +165,9 @@ ttf-liberation
 #### Utilities ####
 ###################
 acpi
-conky
 dunst
 exa
 gpick
-lxappearance
 maim
 picom
 sxhkd
@@ -204,8 +203,8 @@ virtualbox-guest-utils
 #### Other ####
 ###############
 archlinux-keyring
+bat
 base-devel
-cowfortune
 gpick
 gtop
 htop
@@ -217,6 +216,8 @@ lightdm-gtk-greeter-settings
 make
 xdg-utils
 xdotool
+zsh-autosuggestions
+zsh-syntax-highlighting
 
 ##############
 #### Grub ####
@@ -279,6 +280,13 @@ pulseaudio
 pulseaudio-alsa
 pulseaudio-equalizer-ladspa
 
+#######################
+#### Music Players ####
+#######################
+mpd
+mpc
+ncmpcpp
+
 ###############
 #### Files ####
 ###############
@@ -301,6 +309,8 @@ viewnior
 ####################
 ffmpeg
 ffmpegthumbnailer
+yt-dlp
+vlc
 
 ######################
 #### Text Editors ####
@@ -313,6 +323,7 @@ vim
 ######################
 cava
 devour
+oh-my-zsh-git
 paru-bin
 shell-color-scripts
 ulauncher
