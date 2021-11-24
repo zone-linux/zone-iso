@@ -165,12 +165,9 @@ ttf-liberation
 #### Utilities ####
 ###################
 acpi
-dunst
 exa
 gpick
-maim
 picom
-sxhkd
 udiskie
 unzip
 xclip
