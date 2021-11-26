@@ -244,6 +244,11 @@ _perform_various_stuff() {
 		echo "[*] Disabling autologin for lightdm..."
 		sed -i -e 's|autologin-user=.*|#autologin-user=username|g' "$lightdm_config"
 		sed -i -e 's|autologin-session=.*|#autologin-session=xfce|g' "$lightdm_config"
+
+                # Replacing lightdm cursor theme
+                IND_THEME="/usr/share/icons/default/index.theme"
+                echo "[Icon Theme]" > "$IND_THEME"
+                echo "Inherits=Zone" >> "$IND_THEME"
 	fi
 
 	# disabling autologin for lxdm (if exist)
