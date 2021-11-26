@@ -135,6 +135,7 @@ zone-welcome
 zone-release
 zone-xfce
 zone-fonts
+zone-cursor-theme
 zone-grub-theme
 zone-nvim
 zone-vim
@@ -151,7 +152,6 @@ stalker-anomaly-playlist
 #################
 kvantum-qt5
 qt5ct
-adapta-gtk-theme
 qogir-gtk-theme
 kvantum-theme-qogir-git
 papirus-icon-theme
@@ -281,8 +281,9 @@ pulseaudio-equalizer-ladspa
 #######################
 #### Music Players ####
 #######################
-mpd
 mpc
+mpd
+mplayer
 ncmpcpp
 
 ###############
