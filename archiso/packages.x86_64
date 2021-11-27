@@ -168,7 +168,6 @@ nerd-fonts-jetbrains-mono
 ###################
 acpi
 exa
-gpick
 picom
 udiskie
 unzip
@@ -299,9 +298,7 @@ xdg-user-dirs
 ################
 #### Images ####
 ################
-feh
 imagemagick
-nitrogen
 viewnior
 
 ####################
