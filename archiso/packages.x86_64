@@ -162,6 +162,9 @@ papirus-icon-theme
 ttf-dejavu
 ttf-liberation
 nerd-fonts-jetbrains-mono
+adobe-source-han-serif-cn-fonts
+adobe-source-han-serif-jp-fonts
+adobe-source-han-serif-kr-fonts
 
 ###################
 #### Utilities ####
