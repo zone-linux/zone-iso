@@ -215,6 +215,7 @@ lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 make
+python-pip
 xdg-utils
 xdotool
 zsh-autosuggestions
