@@ -16,3 +16,6 @@ for cfg in "${rootconfig[@]}"; do if [[ -e "$skeldir/.config/$cfg" ]]; then cp -
 IND_THEME="/usr/share/icons/default/index.theme"
 echo "[Icon Theme]" > "$IND_THEME"
 echo "Inherits=Zone" >> "$IND_THEME"
+
+# Remove xfce background images
+rm -rf /usr/share/backgrounds/xfce

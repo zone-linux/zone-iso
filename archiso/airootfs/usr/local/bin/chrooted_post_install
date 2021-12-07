@@ -211,6 +211,7 @@ _clean_target_system() {
                 /usr/local/bin/calinstall-debug
 		/usr/share/applications/xfce4-about.desktop
 		/usr/share/calamares
+                /usr/share/backgrounds/xfce
         /{gpg.conf,gpg-agent.conf,pubring.gpg,secring.gpg}
         /var/lib/NetworkManager/NetworkManager.state
     )
