@@ -258,6 +258,7 @@ bmon
 inetutils
 firefox
 networkmanager
+network-manager-applet
 nethogs
 nm-connection-editor
 wget
