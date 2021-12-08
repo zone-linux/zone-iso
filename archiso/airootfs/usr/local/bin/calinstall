@@ -1,8 +1,0 @@
-#!/bin/env bash
-
-if wget -q --tries=10 --timeout=20 --spider https://github.com; then
-    devour sudo calamares
-else
-    notify-send -a "Zone Installer" -t 10000 "Installer cannot continue without an internet connection."
-fi
-

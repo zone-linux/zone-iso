@@ -1,7 +1,0 @@
-#!/bin/env bash
-
-if wget -q --tries=10 --timeout=20 --spider https://github.com; then
-    devour xfce-terminal -x sudo calamares -d
-else
-    notify-send -a "Zone Installer" -t 10000 "Installer cannot continue without an internet connection."
-fi
