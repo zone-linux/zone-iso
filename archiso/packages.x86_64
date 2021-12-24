@@ -209,6 +209,7 @@ base-devel
 gpick
 gtop
 htop
+jq
 libxinerama
 linux-headers
 lightdm
@@ -288,6 +289,7 @@ pulseaudio-equalizer-ladspa
 #######################
 mpc
 mpd
+mpv
 mplayer
 ncmpcpp
 
@@ -323,11 +325,15 @@ vim
 ######################
 #### AUR Packages ####
 ######################
+ani-cli-git
 cava
 devour
+grub2-theme-preview
+minecraft-launcher
 oh-my-zsh-git
 paru-bin
-shell-color-scripts
+tty-clock-git
 ulauncher
 unimatrix-git
+visual-studio-code-bin
 xfce-polkit
