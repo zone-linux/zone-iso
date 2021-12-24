@@ -255,12 +255,14 @@ xorg-xinput
 #### Networking Tools & Applications ####
 #########################################
 bmon
+discord
 inetutils
 firefox
 networkmanager
 network-manager-applet
 nethogs
 nm-connection-editor
+signal-desktop
 wget
 curl
 
@@ -321,6 +323,12 @@ vlc
 ######################
 geany
 vim
+
+#################
+#### Torrent ####
+#################
+qbittorrent
+qbittorrent-nox
 
 ######################
 #### AUR Packages ####
