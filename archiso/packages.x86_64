@@ -141,6 +141,7 @@ zone-vim
 zone-wallpapers
 stalker-metro-playlist
 stalker-anomaly-playlist
+yt-watch
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -203,6 +204,7 @@ virtualbox-guest-utils
 ###############
 #### Other ####
 ###############
+archiso
 archlinux-keyring
 bat
 base-devel
@@ -216,6 +218,7 @@ lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 make
+pacman-contrib
 python-pip
 xdg-utils
 xdotool
