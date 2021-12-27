@@ -140,7 +140,7 @@ zone-nvim
 zone-vim
 zone-wallpapers
 stalker-metro-playlist
-stalker-anomaly-playlist
+#stalker-anomaly-playlist
 yt-watch
 
 #######################################################
@@ -265,7 +265,6 @@ networkmanager
 network-manager-applet
 nethogs
 nm-connection-editor
-signal-desktop
 wget
 curl
 
@@ -295,7 +294,6 @@ pulseaudio-equalizer-ladspa
 mpc
 mpd
 mpv
-mplayer
 ncmpcpp
 
 ###############
@@ -316,9 +314,8 @@ viewnior
 ##########################
 #### Editing Software ####
 ##########################
-gimp
-inkscape
-kdenlive
+#gimp
+#inkscape
 
 ####################
 #### Multimedia ####
@@ -326,7 +323,7 @@ kdenlive
 ffmpeg
 ffmpegthumbnailer
 yt-dlp
-vlc
+#vlc
 
 ######################
 #### Text Editors ####
@@ -345,13 +342,9 @@ qbittorrent-nox
 ######################
 ani-cli-git
 cava
-devour
-grub2-theme-preview
-minecraft-launcher
 oh-my-zsh-git
 paru-bin
 tty-clock-git
 ulauncher
 unimatrix-git
-visual-studio-code-bin
 xfce-polkit
