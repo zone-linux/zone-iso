@@ -141,7 +141,7 @@ zone-vim
 zone-wallpapers
 stalker-metro-playlist
 #stalker-anomaly-playlist
-yt-watch
+yt-watch-git
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -293,6 +293,7 @@ pulseaudio-equalizer-ladspa
 #######################
 mpc
 mpd
+mplayer
 mpv
 ncmpcpp
 
