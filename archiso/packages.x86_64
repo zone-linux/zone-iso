@@ -207,6 +207,7 @@ archiso
 archlinux-keyring
 bat
 base-devel
+fzf
 gpick
 gtop
 htop
