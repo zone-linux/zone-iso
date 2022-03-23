@@ -141,7 +141,6 @@ zone-vim
 zone-wallpapers
 stalker-metro-playlist
 #stalker-anomaly-playlist
-yt-watch-git
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -274,7 +273,7 @@ curl
 blueman
 bluez
 bluez-utils
-pulseaudio-bluetooth
+blueberry
 
 ###############
 #### Sound ####
@@ -284,9 +283,12 @@ alsa-tools
 alsa-utils
 pavucontrol
 portaudio
-pulseaudio
-pulseaudio-alsa
-pulseaudio-equalizer-ladspa
+pipewire
+wireplumber
+pipewire-alsa
+pipewire-jack
+pipewire-zeroconf
+pipewire-pulse
 
 #######################
 #### Music Players ####
@@ -349,3 +351,4 @@ tty-clock-git
 ulauncher
 unimatrix-git
 xfce-polkit
+ytfzf-git
