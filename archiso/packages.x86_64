@@ -124,7 +124,6 @@ zsh
 ###  PACKAGES THAT ARE REMOVED AFTER INSTALLATION   ###
 ###             VIA CALAMARES CONFIG                ###
 #######################################################
-
 zone-calamares
 zone-calamares-config
 
@@ -161,9 +160,9 @@ kvantum-theme-qogir-git
 ttf-dejavu
 ttf-liberation
 nerd-fonts-jetbrains-mono
-adobe-source-han-serif-cn-fonts
-adobe-source-han-serif-jp-fonts
-adobe-source-han-serif-kr-fonts
+#adobe-source-han-serif-cn-fonts
+#adobe-source-han-serif-jp-fonts
+#adobe-source-han-serif-kr-fonts
 
 ###################
 #### Utilities ####
@@ -271,9 +270,7 @@ curl
 ###################
 #### Bluetooth ####
 ###################
-blueman
 bluez
-bluez-utils
 blueberry
 
 ###############
@@ -327,7 +324,6 @@ viewnior
 ffmpeg
 ffmpegthumbnailer
 yt-dlp
-#vlc
 
 ######################
 #### Text Editors ####
