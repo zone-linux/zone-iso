@@ -271,6 +271,7 @@ curl
 #### Bluetooth ####
 ###################
 bluez
+bluez-utils
 blueberry
 
 ###############
