@@ -272,7 +272,7 @@ _perform_various_stuff() {
 	# Perform various operations
 	echo "+---------------------->>"
 	echo "[*] Running operations as new user : ${new_user}..."
-    [[ -x `which archcraft-hooks-runner` ]] && archcraft-hooks-runner
+    [[ -x `which zone-hooks-runner` ]] && zone-hooks-runner
 	runuser -l ${new_user} -c 'xdg-user-dirs-update'
 	runuser -l ${new_user} -c 'xdg-user-dirs-gtk-update'
 
