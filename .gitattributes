@@ -1,0 +1,24 @@
+# Force LF line endings for all text files on checkout
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.conf text eol=lf
+*.cfg text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.install text eol=lf
+PKGBUILD text eol=lf
+# Binary files
+*.zst binary
+*.tar.gz binary
+*.tar.xz binary
+*.pkg.tar.* binary
+*.db binary
+*.sig binary
+*.png binary
+*.ogg binary
+*.jpg binary
+*.ico binary

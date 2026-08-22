@@ -20,7 +20,7 @@ echo
 	#isoLabel='arcolinux-next-'$arcolinuxVersion'-x86_64.iso'
 
 	# setting of the general parameters
-	archisoRequiredVersion="archiso 60-1"
+	archisoRequiredVersion="archiso"  # Version pin removed; any current archiso is supported
 	buildFolder=$HOME"/Zone-Build"
 	outFolder=$HOME"/Zone-Iso"
 	archisoVersion=$(sudo pacman -Q archiso)
@@ -29,26 +29,21 @@ echo
 	#echo "Building the desktop                   : "$desktop
 	#echo "Building version                       : "$arcolinuxVersion
 	#echo "Iso label                              : "$isoLabel
-	echo "Do you have the right archiso version? : $archisoVersion"
-	echo "What is the required archiso version?  : $archisoRequiredVersion"
+	echo "Installed archiso version              : $archisoVersion"
 	echo "Build folder                           : $buildFolder"
 	echo "Out folder                             : $outFolder"
 	echo "################################################################## "
 
-	if [ "$archisoVersion" == "$archisoRequiredVersion" ]; then
+	if [[ "$archisoVersion" == archiso* ]]; then
 		tput setaf 2
 		echo "##################################################################"
-		echo "Archiso has the correct version. Continuing ..."
+		echo "Archiso is installed. Continuing ..."
 		echo "##################################################################"
 		tput sgr0
 	else
 	tput setaf 1
 	echo "###################################################################################################"
-	echo "You need to install the correct version of Archiso"
-	echo "Use 'sudo downgrade archiso' to do that"
-	echo "or update your system"
-	echo "If a new archiso package comes in and you want to test if you can still build"
-	echo "the iso then change the version in line 37."
+	echo "archiso is not installed. Install it with: sudo pacman -S archiso"
 	echo "###################################################################################################"
 	tput sgr0
 	fi

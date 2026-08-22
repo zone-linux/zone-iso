@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 set -e -u
 
 ## Copy Specific Configurations to Root Directory

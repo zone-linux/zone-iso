@@ -107,12 +107,12 @@ _remove_qemu_pkgs() {
 _remove_unwanted_graphics_drivers() {
 	local gpu_file='/var/log/gpu-card-info.bash'
 
-	local amd_card=''
-	local amd_driver=''
-	local intel_card=''
-	local intel_driver=''
-	local nvidia_card=''
-	local nvidia_driver=''
+	local amd_card='no'
+	local amd_driver='no'
+	local intel_card='no'
+	local intel_driver='no'
+	local nvidia_card='no'
+	local nvidia_driver='no'
 
 	if [[ -r "$gpu_file" ]] ; then
 		echo "+---------------------->>"

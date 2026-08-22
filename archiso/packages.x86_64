@@ -7,14 +7,13 @@ arch-install-scripts
 archinstall
 b43-fwcutter
 base
-bind-tools
+bind
 brltty
 broadcom-wl
 btrfs-progs
 ckbcomp
 clonezilla
 cloud-init
-crda
 cryptsetup
 darkhttpd
 ddrescue
@@ -23,7 +22,6 @@ dhcpcd
 diffutils
 dmraid
 dnsmasq
-dnsutils
 dosfstools
 e2fsprogs
 edk2-shell
@@ -89,7 +87,6 @@ pptpclient
 pv
 qemu-guest-agent
 reflector
-reiserfsprogs
 rp-pppoe
 rsync
 rxvt-unicode-terminfo
@@ -159,7 +156,7 @@ kvantum-theme-qogir-git
 ###############
 ttf-dejavu
 ttf-liberation
-nerd-fonts-jetbrains-mono
+ttf-jetbrains-mono-nerd
 #adobe-source-han-serif-cn-fonts
 #adobe-source-han-serif-jp-fonts
 #adobe-source-han-serif-kr-fonts
@@ -304,7 +301,6 @@ ncmpcpp
 ncdu
 ranger
 thunar
-ueberzug
 xdg-user-dirs
 
 ################
