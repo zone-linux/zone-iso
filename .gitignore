@@ -1,0 +1,7 @@
+# ISO build artifacts
+zone-work/
+zone-out/
+out/
+work/
+*.iso
+*.iso.sha256

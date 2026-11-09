@@ -1,0 +1,14 @@
+[Unit]
+Description=Zone live medium setup
+ConditionPathExists=/run/archiso
+After=local-fs.target
+Before=display-manager.service lightdm.service
+Wants=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/zone-live-setup
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# zone-live-setup — one-shot live-medium preparation.
+#
+# Replaces the deprecated customize_airootfs.sh chroot hook. Runs once on the
+# live medium before the display manager starts.
+
+set -euo pipefail
+
+skeldir="/etc/skel"
+rootdir="/root"
+
+mkdir -p "${rootdir}/.config"
+
+rootdots=('.local' '.vim_runtime' '.vimrc' '.mpd' '.dmrc' '.zshrc' '.zshrc-personal')
+for dfile in "${rootdots[@]}"; do
+    [[ -e "${skeldir}/${dfile}" ]] && cp -a "${skeldir}/${dfile}" "${rootdir}/"
+done
+
+rootconfig=(dconf cava qt5ct qt6ct neofetch conky Thunar gtk-2.0 gtk-3.0 xfce4 geany Kvantum ulauncher ranger autostart nvim)
+for cfg in "${rootconfig[@]}"; do
+    [[ -e "${skeldir}/.config/${cfg}" ]] && cp -a "${skeldir}/.config/${cfg}" "${rootdir}/.config/"
+done
+
+# Use the Zone cursor theme for X11 clients.
+install -dm755 /usr/share/icons/default
+cat > /usr/share/icons/default/index.theme <<'EOF'
+[Icon Theme]
+Inherits=Zone
+EOF
+
+# The bundled XFCE wallpapers are replaced by the Zone wallpaper package.
+rm -rf /usr/share/backgrounds/xfce

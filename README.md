@@ -3,41 +3,55 @@
 </p>
 <h1 align="center">Welcome To The Zone</h1>
 
-Zone Linux is a custom Arch Linux-based live ISO with an XFCE desktop themed around S.T.A.L.K.E.R.
+Zone Linux is a custom Arch Linux-based live ISO with an XFCE desktop themed around
+S.T.A.L.K.E.R.
 
 ## Build (Docker — recommended)
 
-Requires Docker on a Linux host. Run once from the repo root:
+Docker is the supported path on non-root hosts. The script builds the `zone-builder`
+image, runs `mkarchiso` inside it, and restores ownership of the output.
 
 ```bash
-chmod +x build.sh
-./build.sh
+./build.sh                      # use the repositories configured in pacman.conf
+./build.sh --local-repos        # use the workspace zone-*-repo checkouts
+./build.sh --clean              # remove the work directory first
+./build.sh --no-cache           # rebuild the builder image
 ```
 
-The ISO is written to `zone-out/`.
+The ISO is written to `zone-out/`, together with a `.sha256` checksum.
 
 ## Build (native archiso)
 
-Requires a current Arch Linux host with `archiso` installed.
+Requires a current Arch Linux host with `archiso` installed and root access:
 
 ```bash
-sudo pacman -S archiso
-sudo mkarchiso -v -w /tmp/zone-work -o ./zone-out ./archiso
+sudo ./build.sh --native --local-repos
 ```
 
 ## Flash to USB
 
 ```bash
+./flash.sh                      # interactive, USB-only device list
 sudo dd if=zone-out/zone-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
-Replace `/dev/sdX` with your target device (check with `lsblk`).
+Replace `/dev/sdX` with the target device (check with `lsblk`).
+
+## Test
+
+```bash
+./test.sh --bios --verify
+./test.sh --uefi --verify
+./test.sh --headless --timeout 180
+```
 
 ## Adding a Package
 
-1. Add the package name to `archiso/packages.x86_64`
-2. If the package has executables in `airootfs/usr/local/bin/`, add a `"0:0:755"` entry in `profiledef.sh`'s `file_permissions` array
-3. If it is a custom package, build a PKGBUILD in `zone-pkgbuild/`, add the binary to the appropriate `zone-*-repo`, and ensure `pacman.conf` references that repo
+1. Add the package name to `archiso/packages.x86_64`.
+2. If the package ships executables in `airootfs/usr/local/bin/`, add a `"0:0:755"`
+   entry in `profiledef.sh`'s `file_permissions` array.
+3. If it is a custom package, build it in `zone-pkgbuild/`, publish it to the
+   matching `zone-*-repo`, and make sure `pacman.conf` references that repo.
 
 ## Repository Layout
 
@@ -46,15 +60,28 @@ Replace `/dev/sdX` with your target device (check with `lsblk`).
 | `archiso/` | archiso profile (packages, hooks, configs, bootloaders) |
 | `archiso/airootfs/` | Files overlaid onto the live rootfs |
 | `archiso/packages.x86_64` | All packages installed in the live ISO |
-| `installation-scripts/` | Legacy manual build helper scripts |
+| `archiso/efiboot/` | systemd-boot entries (UEFI) |
+| `archiso/syslinux/` | syslinux entries (BIOS) |
 | `docker/` | Dockerfile for containerised builds |
-| `build.sh` | Docker build wrapper |
+| `build.sh` | Docker/native build wrapper |
+
+`zone-live-setup.service` runs `airootfs/usr/local/bin/zone-live-setup` once at
+boot. It replaces the deprecated archiso `customize_airootfs.sh` hook.
 
 ## Notable Changes (2022 → 2026)
 
-- mkinitcpio HOOKS: removed `archiso_shutdown` (dropped upstream) and `archiso_kms` (deprecated); added `kms`; added `MODULES=(loop squashfs overlay)`
-- Compression: switched from xz to zstd for faster build and boot
-- pacman.conf: removed defunct `[community]` repo (merged into `[extra]` in Aug 2023)
-- packages: removed `crda` (defunct since kernel 5.15), `reiserfsprogs` (removed from kernel 6.6), `ueberzug` (project archived), `bind-tools`/`dnsutils` (replaced by `bind`); renamed `nerd-fonts-jetbrains-mono` → `ttf-jetbrains-mono-nerd`
-- syslinux: fixed stray `16` that broke the NVIDIA BIOS boot entry
-- chrooted_post_install: fixed GPU variable initialisation bug that left stale drivers on installed systems
+- archiso 92 bootmodes: `bios.syslinux` + `uefi.systemd-boot` (old aliases removed)
+- Boot entries use `archisosearchuuid` and a single initramfs (microcode embedded)
+- `mkinitcpio.conf.d/archiso.conf` replaces the full `mkinitcpio.conf` override
+- No `/etc/mkinitcpio.d/linux.preset` is shipped: mkinitcpio generates presets
+  from `hook.preset`, and a custom preset with `ALL_config` would disable the
+  `mkinitcpio.conf.d` drop-ins (dropping the `archiso` hook and breaking boot)
+- `customize_airootfs.sh` replaced by `zone-live-setup.service`
+- `udev/rules.d/98-zone-live-no-gpt-loop.rules` suppresses systemd's unused
+  GPT auto-discovery loop attach on optical drives (noisy UEFI-only failure)
+- Accessibility/speech boot entry and `memtest86+` EFI entry added
+- pacman.conf: defunct `[community]` removed; `CheckSpace` disabled for the chroot
+- packages: dead names replaced (`exa`→`eza`, `blueberry`→`blueman`, `ntfs-3g`→`ntfsprogs`,
+  `nvidia`→`nvidia-open`, `gnu-netcat`→`openbsd-netcat`); `crda`, `reiserfsprogs`,
+  `ueberzug`, `mplayer`, `broadcom-wl`, `ipw2100-fw`, `ipw2200-fw` removed
+- Legacy `installation-scripts/` deleted; `build.sh` is the single entry point

@@ -1,0 +1,11 @@
+# The live medium mounts its own squashfs image from the ISO, so systemd's
+# GPT auto-discovery loop attach is unnecessary here. On optical drives whose
+# firmware cannot partition-scan, udev sets
+# ID_PART_GPT_AUTO_ROOT_DISK_NEEDS_LOOP=1, which makes 99-systemd.rules queue
+# systemd-loop@<device>.service. That unit runs
+# "systemd-dissect --attach --loop-ref-auto /dev/sr0" and fails on a raw block
+# device (the attach expects a disk image), producing a harmless but noisy
+# FAILED line on every UEFI boot.
+#
+# Clear the hint before 99-systemd.rules is evaluated; 98 sorts earlier.
+SUBSYSTEM=="block", ENV{ID_CDROM}=="1", ENV{ID_PART_GPT_AUTO_ROOT_DISK_NEEDS_LOOP}="0"

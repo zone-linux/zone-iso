@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  profile:
+    name: Validate the archiso profile
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install tooling
+        run: pacman -Syu --noconfirm --needed bash git python shellcheck
+
+      - uses: actions/checkout@v4
+
+      - name: Bash syntax
+        run: |
+          bash -n build.sh
+          bash -n archiso/profiledef.sh
+          bash -n archiso/airootfs/usr/local/bin/zone-live-setup
+          bash -n archiso/airootfs/usr/local/bin/post_install
+          bash -n archiso/airootfs/usr/local/bin/chrooted_post_install
+
+      - name: shellcheck
+        run: shellcheck -S warning build.sh archiso/airootfs/usr/local/bin/zone-live-setup
+
+      - name: Profile consistency
+        run: |
+          set -euo pipefail
+          profile=archiso/profiledef.sh
+
+          if grep -q 'bios.syslinux.mbr\|uefi-x64.systemd-boot' "$profile"; then
+            echo "profiledef.sh uses deprecated bootmodes" >&2
+            exit 1
+          fi
+
+          if find archiso -name 'customize_airootfs.sh' -print -quit | grep -q . ||
+             grep -rnE '^[[:space:]]*[^#[:space:]].*customize_airootfs' archiso >/dev/null 2>&1; then
+            echo "archiso still references customize_airootfs.sh" >&2
+            exit 1
+          fi
+
+          diff -u archiso/pacman.conf archiso/airootfs/etc/pacman.conf
+
+          while IFS= read -r file; do
+            relative="/${file#archiso/airootfs/}"
+            grep -q "[\"']${relative}[\"']" "$profile" \
+              || { echo "file_permissions missing: $relative" >&2; exit 1; }
+          done < <(find archiso/airootfs/usr/local/bin -type f -perm -u+x | sort)
+
+      - name: Boot configuration
+        run: |
+          set -euo pipefail
+          for entry in archiso/efiboot/loader/entries/*.conf; do
+            if grep -q '^linux' "$entry"; then
+              grep -q '^initrd' "$entry" \
+                || { echo "$entry: linux entry without initrd" >&2; exit 1; }
+              count=$(grep -c '^initrd' "$entry")
+              [ "$count" -eq 1 ] \
+                || { echo "$entry: expected one initrd, found $count" >&2; exit 1; }
+            fi
+          done
+
+          for entry in archiso/syslinux/*.cfg; do
+            linux_lines=$(grep '^LINUX' "$entry" || true)
+            [[ -n "$linux_lines" ]] || continue
+            # Standalone payloads such as memtest86+ take no initramfs.
+            if grep '^LINUX' "$entry" | grep -qv 'memtest'; then
+              linux_count=$(grep -c '^LINUX' "$entry")
+              initrd_count=$(grep -c '^INITRD' "$entry")
+              [ "$linux_count" -eq "$initrd_count" ] \
+                || { echo "$entry: LINUX/INITRD mismatch" >&2; exit 1; }
+            fi
+          done
+
+      - name: Package list
+        run: python3 .github/scripts/check-packages.py

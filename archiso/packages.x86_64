@@ -9,7 +9,6 @@ b43-fwcutter
 base
 bind
 brltty
-broadcom-wl
 btrfs-progs
 ckbcomp
 clonezilla
@@ -32,14 +31,12 @@ exfatprogs
 f2fs-tools
 fatresize
 fsarchiver
-gnu-netcat
+openbsd-netcat
 gpart
 gpm
 gptfdisk
 hdparm
 intel-ucode
-ipw2100-fw
-ipw2200-fw
 irssi
 iw
 iwd
@@ -61,6 +58,7 @@ man-pages
 mc
 mdadm
 memtest86+
+memtest86+-efi
 mkinitcpio
 mkinitcpio-archiso
 mkinitcpio-nfs-utils
@@ -73,7 +71,7 @@ ndisc6
 nfs-utils
 nilfs-utils
 nmap
-ntfs-3g
+ntfsprogs
 nvme-cli
 openconnect
 openssh
@@ -121,7 +119,7 @@ zsh
 ###  PACKAGES THAT ARE REMOVED AFTER INSTALLATION   ###
 ###             VIA CALAMARES CONFIG                ###
 #######################################################
-zone-calamares
+calamares
 zone-calamares-config
 
 #################################
@@ -145,10 +143,12 @@ stalker-metro-playlist
 #################
 #### Theming ####
 #################
+kvantum
 kvantum-qt5
 qt5ct
-qogir-icon-theme
-qogir-gtk-theme
+qt6ct
+qogir-icon-theme-git
+qogir-gtk-theme-git
 kvantum-theme-qogir-git
 
 ###############
@@ -166,7 +166,8 @@ ttf-jetbrains-mono-nerd
 ###################
 acpi
 conky
-exa
+eza
+btop
 picom
 udisks2
 unzip
@@ -187,14 +188,16 @@ xf86-video-vesa
 ########################
 #### Nvidia Drivers ####
 ########################
-nvidia
+nvidia-open
 nvidia-utils
 nvidia-settings
 
-#####################
-#### Virtual Box ####
-#####################
+###########################
+#### Virtualization Guest #
+###########################
 virtualbox-guest-utils
+open-vm-tools
+hyperv
 
 ###############
 #### Other ####
@@ -203,9 +206,9 @@ archiso
 archlinux-keyring
 bat
 base-devel
+expac
 fzf
 gpick
-gtop
 htop
 jq
 libxinerama
@@ -269,7 +272,7 @@ curl
 ###################
 bluez
 bluez-utils
-blueberry
+blueman
 
 ###############
 #### Sound ####
@@ -291,7 +294,6 @@ pipewire-pulse
 #######################
 mpc
 mpd
-mplayer
 mpv
 ncmpcpp
 
@@ -300,6 +302,7 @@ ncmpcpp
 ###############
 ncdu
 ranger
+ripgrep
 thunar
 xdg-user-dirs
 
@@ -308,6 +311,8 @@ xdg-user-dirs
 ################
 imagemagick
 viewnior
+zathura
+zathura-pdf-mupdf
 
 ##########################
 #### Editing Software ####
