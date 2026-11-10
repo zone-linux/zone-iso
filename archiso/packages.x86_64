@@ -134,7 +134,7 @@ zone-nvim
 zone-vim
 zone-wallpapers
 stalker-metro-playlist
-#stalker-anomaly-playlist
+stalker-anomaly-playlist
 
 #######################################################
 ###                    EXTRAS                       ###
@@ -304,6 +304,11 @@ ncdu
 ranger
 ripgrep
 thunar
+thunar-volman
+gvfs
+gvfs-gphoto2
+gvfs-mtp
+gvfs-smb
 xdg-user-dirs
 
 ################
