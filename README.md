@@ -45,6 +45,22 @@ Replace `/dev/sdX` with the target device (check with `lsblk`).
 ./test.sh --headless --timeout 180
 ```
 
+## Boot splash
+
+The ISO ships Plymouth with four Zone themes (`zone-mark`, `zone-anomaly`,
+`zone-pda`, `zone-sector`) from `zone-plymouth-theme`. All four are embedded in
+the initramfs and one is chosen per boot from the kernel boot ID.
+
+- `zone.splash=zone-pda` on the kernel command line forces a theme for that boot.
+- `zone-splash-theme <theme>` (installed systems, as root) pins a theme and
+  rebuilds the initramfs; `zone-splash-theme random` restores per-boot rotation.
+- The bootloader menu is unchanged; only the kernel command line carries
+  `splash vt.global_cursor_default=0 plymouth.ignore-serial-consoles`.
+
+The saved boot entry needs `splash` for graphical mode. Headless serial tests
+keep working because `plymouth.ignore-serial-consoles` is set and the splash
+falls back to text mode when no graphical console is available.
+
 ## Adding a Package
 
 1. Add the package name to `archiso/packages.x86_64`.

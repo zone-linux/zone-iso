@@ -224,6 +224,43 @@ _clean_target_system() {
     find /usr/lib/initcpio -name archiso* -type f -exec rm '{}' \;
 }
 
+## -------- Configure the installed initramfs ---------
+
+_configure_initramfs() {
+	echo "+---------------------->>"
+	echo "[*] Configuring the target initramfs..."
+
+	# The live medium's override points at the archiso hooks, which the
+	# installer removes. The installed system uses the main configuration.
+	rm -f /etc/mkinitcpio.conf.d/archiso.conf
+
+	if [[ -f /etc/mkinitcpio.conf ]]; then
+		# initcpiocfg may already have added plymouth; start clean so the
+		# hooks are listed exactly once, then place them after the earliest
+		# hook that is guaranteed to be present.
+		sed -i -E '/^HOOKS=/{s/[[:space:]]*\b(zone-splash|plymouth)\b//g}' /etc/mkinitcpio.conf
+
+		insert_after=""
+		for candidate in udev systemd base; do
+			if grep -qE "^HOOKS=\([^)]*\\b${candidate}\\b" /etc/mkinitcpio.conf; then
+				insert_after="${candidate}"
+				break
+			fi
+		done
+
+		if [[ -n "${insert_after}" ]]; then
+			sed -i -E "s/^(HOOKS=\\([^)]*\\b${insert_after}\\b)([[:space:]]|\\))/\\1 zone-splash plymouth\\2/" \
+				/etc/mkinitcpio.conf
+		else
+			sed -i -E 's/^HOOKS=\(/HOOKS=(zone-splash plymouth /' /etc/mkinitcpio.conf
+		fi
+	fi
+
+	if command -v mkinitcpio >/dev/null 2>&1; then
+		mkinitcpio -P
+	fi
+}
+
 ## -------- Perform Misc Operations --------------
 
 _perform_various_stuff() {
@@ -289,6 +326,7 @@ _remove_qemu_pkgs
 _remove_unwanted_graphics_drivers
 _remove_unwanted_ucode
 _clean_target_system
+_configure_initramfs
 _perform_various_stuff
 
 

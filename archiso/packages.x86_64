@@ -49,6 +49,7 @@ libusb-compat
 linux
 linux-atm
 linux-firmware
+plymouth
 livecd-sounds
 lsscsi
 lvm2
@@ -127,6 +128,7 @@ zone-calamares-config
 #################################
 zone-release
 zone-xfce
+zone-plymouth-theme
 zone-fonts
 zone-cursor-theme
 zone-grub-theme
