@@ -57,9 +57,13 @@ the initramfs and one is chosen per boot from the kernel boot ID.
 - The bootloader menu is unchanged; only the kernel command line carries
   `splash vt.global_cursor_default=0 plymouth.ignore-serial-consoles`.
 
-The saved boot entry needs `splash` for graphical mode. Headless serial tests
-keep working because `plymouth.ignore-serial-consoles` is set and the splash
-falls back to text mode when no graphical console is available.
+The saved boot entry needs `splash` for graphical mode. The live initramfs
+enables the `kms` hook so BIOS systems have a framebuffer before the root
+filesystem is mounted; UEFI systems can also use the firmware framebuffer.
+`plymouth.ignore-serial-consoles` keeps the graphical splash on machines whose
+kernel command line also contains a serial console, and headless serial tests
+still work because the splash falls back to text mode when no framebuffer is
+available.
 
 ## Adding a Package
 
