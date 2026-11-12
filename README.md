@@ -49,7 +49,8 @@ Replace `/dev/sdX` with the target device (check with `lsblk`).
 
 The ISO ships Plymouth with four Zone themes (`zone-mark`, `zone-anomaly`,
 `zone-pda`, `zone-sector`) from `zone-plymouth-theme`. All four are embedded in
-the initramfs and one is chosen per boot from the kernel boot ID.
+the initramfs and one is chosen per boot from the kernel random UUID mixed with
+the boot time.
 
 - `zone.splash=zone-pda` on the kernel command line forces a theme for that boot.
 - `zone-splash-theme <theme>` (installed systems, as root) pins a theme and
