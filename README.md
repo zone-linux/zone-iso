@@ -80,6 +80,15 @@ available.
 Pull requests stop after the profile job: they do not run a privileged
 container build, and the 3.2 GB artifact is only useful for real builds.
 
+## Sound
+
+The `Zone` freedesktop sound theme, `zone-detector` and the extended
+`startupsound` ship in the `zone-xfce` package: the theme and all 16 OGG
+assets land in `/usr/share/sounds/zone`, the scripts in `/usr/bin`, and the
+detector unit in `/etc/skel/.config/systemd/user`. `libcanberra` is listed in
+`packages.x86_64` explicitly because the GTK module would otherwise only be a
+transitive dependency of `xfce4-settings`.
+
 ## Adding a Package
 
 1. Add the package name to `archiso/packages.x86_64`.
