@@ -290,6 +290,7 @@ pipewire-alsa
 pipewire-jack
 pipewire-zeroconf
 pipewire-pulse
+libcanberra
 
 #######################
 #### Music Players ####
