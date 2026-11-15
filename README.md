@@ -66,6 +66,20 @@ kernel command line also contains a serial console, and headless serial tests
 still work because the splash falls back to text mode when no framebuffer is
 available.
 
+## CI
+
+`.github/workflows/ci.yml` has two jobs:
+
+- **profile** runs on every push and pull request: bash syntax, shellcheck,
+  profile consistency, boot entries and the package list.
+- **build** runs on pushes to `master` and manual dispatches: it builds the ISO
+  with the same Docker path as `./build.sh`, verifies the checksum and the
+  boot-splash payload (boot entries, `zone-splash`, Plymouth and all four
+  themes), then uploads the ISO and `.sha256` as a 7-day artifact.
+
+Pull requests stop after the profile job: they do not run a privileged
+container build, and the 3.2 GB artifact is only useful for real builds.
+
 ## Adding a Package
 
 1. Add the package name to `archiso/packages.x86_64`.
@@ -84,6 +98,8 @@ available.
 | `archiso/efiboot/` | systemd-boot entries (UEFI) |
 | `archiso/syslinux/` | syslinux entries (BIOS) |
 | `docker/` | Dockerfile for containerised builds |
+| `.github/workflows/ci.yml` | Profile validation, ISO build, splash payload check |
+| `.github/scripts/check-iso.sh` | Asserts boot entries and initramfs carry the splash |
 | `build.sh` | Docker/native build wrapper |
 
 `zone-live-setup.service` runs `airootfs/usr/local/bin/zone-live-setup` once at

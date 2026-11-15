@@ -4,17 +4,22 @@ on:
   push:
     branches: [main, master]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   profile:
     name: Validate the archiso profile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: archlinux:latest
     steps:
       - name: Install tooling
-        run: pacman -Syu --noconfirm --needed bash git python shellcheck
+        run: pacman -Syu --noconfirm --needed bash diffutils git python shellcheck
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Bash syntax
         run: |
@@ -78,3 +83,65 @@ jobs:
 
       - name: Package list
         run: python3 .github/scripts/check-packages.py
+
+  build:
+    name: Build the ISO
+    # Pull requests validate the profile only: running untrusted PR code in a
+    # privileged container is not worth it, and the 3.2 GB artefact is only
+    # useful for pushes and manual runs.
+    if: github.event_name != 'pull_request'
+    needs: profile
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          sudo apt-get clean
+          docker image prune -af
+          df -h /
+
+      - name: Build the ISO
+        run: |
+          set -o pipefail
+          # The Zone repositories are served from GitHub Pages; a single slow
+          # package request aborts pacstrap. Retry the whole build rather than
+          # leaving a half-populated airootfs behind.
+          for attempt in 1 2 3; do
+            echo "::group::build attempt ${attempt}"
+            if ./build.sh --docker --clean; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "build attempt ${attempt} failed; retrying in 30s" >&2
+            sleep 30
+          done
+          exit 1
+
+      - name: Verify the ISO
+        run: |
+          set -euo pipefail
+          iso=$(find zone-out -maxdepth 1 -name '*.iso' -type f | sort | tail -1)
+          test -n "$iso"
+          (cd zone-out && sha256sum -c "$(basename "$iso").sha256")
+          ls -lh "$iso"
+
+      - name: Verify the boot splash payload
+        run: |
+          docker run --rm -v "$PWD:/src:ro" zone-builder bash -euo pipefail \
+            /src/.github/scripts/check-iso.sh /src/zone-out
+
+      - name: Upload the ISO
+        uses: actions/upload-artifact@v7
+        with:
+          name: zone-iso-${{ github.sha }}
+          path: |
+            zone-out/*.iso
+            zone-out/*.iso.sha256
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7

@@ -1,0 +1,6 @@
+.git
+.github
+zone-out
+zone-work
+*.iso
+*.iso.sha256

@@ -103,8 +103,12 @@ import sys, pathlib, re
 path, name, server = sys.argv[1:4]
 p = pathlib.Path(path)
 s = p.read_text()
-pat = re.compile(r'(^\[%s\][^\[]*?^Server\s*=\s*)\S+' % re.escape(name), re.M)
-s, n = pat.subn(lambda m: m.group(1) + server + '/$arch', s)
+pat = re.compile(r'^\[%s\](.*?)(?=^\[|\Z)' % re.escape(name), re.M | re.S)
+def rewrite(m):
+    body = re.sub(r'(?:^Server\s*=.*\n?)+',
+                  'Server = %s/$arch\n' % server, m.group(1), flags=re.M)
+    return '[%s]%s' % (name, body)
+s, n = pat.subn(rewrite, s)
 if n == 0:
     raise SystemExit(f'could not rewrite repository: {name}')
 p.write_text(s)
@@ -114,7 +118,7 @@ PY
 }
 
 TMP_CONF=""
-cleanup() { [[ -n "$TMP_CONF" ]] && rm -f "$TMP_CONF"; }
+cleanup() { if [[ -n "$TMP_CONF" ]]; then rm -f "$TMP_CONF"; fi; }
 trap cleanup EXIT
 
 if [[ "$MODE" == "native" ]]; then
