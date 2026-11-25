@@ -79,7 +79,7 @@ if [[ $CLEAN -eq 1 ]]; then
     info "cleaning $WORK_DIR"
     if [[ "$MODE" == "docker" ]]; then
         # Build artefacts are root-owned; remove them from inside a container.
-        docker run --rm -v "${WORK_DIR}:/work" archlinux:latest \
+        docker run --rm --network none -v "${WORK_DIR}:/work" archlinux:latest \
             sh -c 'rm -rf /work/* /work/.[!.]* /work/..?* 2>/dev/null || true'
     else
         rm -rf "${WORK_DIR:?}"/*
@@ -141,7 +141,7 @@ else
         info "building zone-builder image"
         build_args=()
         [[ $NO_CACHE -eq 1 ]] && build_args+=(--no-cache)
-        docker build "${build_args[@]}" -t zone-builder -f "${SCRIPT_DIR}/docker/Dockerfile" "$SCRIPT_DIR"
+        docker build --network host "${build_args[@]}" -t zone-builder -f "${SCRIPT_DIR}/docker/Dockerfile" "$SCRIPT_DIR"
     fi
 
     mounts=(
@@ -160,14 +160,14 @@ else
     fi
 
     info "building ISO in Docker (work: $WORK_DIR)"
-    docker run --rm --privileged \
+    docker run --rm --privileged --network host \
         "${mounts[@]}" \
         zone-builder \
         mkarchiso -v -w /build/work -o /build/out "${conf_args[@]}" /build/archiso
 
     # mkarchiso runs as root inside the container; hand the output back.
     info "restoring ownership of $OUT_DIR"
-    docker run --rm -v "${OUT_DIR}:/build/out" zone-builder \
+    docker run --rm --network none -v "${OUT_DIR}:/build/out" zone-builder \
         chown -R "$(id -u):$(id -g)" /build/out >/dev/null
 fi
 
