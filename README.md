@@ -6,6 +6,30 @@
 Zone Linux is a custom Arch Linux-based live ISO with an XFCE desktop themed around
 S.T.A.L.K.E.R.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/splash.png" alt="Boot splash" width="480"></td>
+    <td><img src="docs/screenshots/greeter.png" alt="Login screen" width="480"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/desktop.png" alt="XFCE desktop" width="480"></td>
+    <td><img src="docs/screenshots/menu.png" alt="Application finder" width="480"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/terminal.png" alt="Terminal and neofetch" width="480"></td>
+    <td><img src="docs/screenshots/installer.png" alt="Calamares installer" width="480"></td>
+  </tr>
+</table>
+
+The screenshots are captured from a built ISO under QEMU/KVM. Regenerate them with:
+
+```bash
+./scripts/capture-screenshots.sh            # newest zone-out/zone-*.iso
+./scripts/capture-screenshots.sh path.iso   # a specific ISO
+```
+
 ## Build (Docker — recommended)
 
 Docker is the supported path on non-root hosts. The script builds the `zone-builder`
@@ -68,14 +92,26 @@ available.
 
 ## CI
 
-`.github/workflows/ci.yml` has two jobs:
+`.github/workflows/ci.yml` has three jobs:
 
 - **profile** runs on every push and pull request: bash syntax, shellcheck,
   profile consistency, boot entries and the package list.
 - **build** runs on pushes to `master` and manual dispatches: it builds the ISO
   with the same Docker path as `./build.sh`, verifies the checksum and the
   boot-splash payload (boot entries, `zone-splash`, Plymouth and all four
-  themes), then uploads the ISO and `.sha256` as a 7-day artifact.
+  themes), writes the installed package list to `packages.txt`, then uploads
+  the ISO, `.sha256` and `packages.txt` as a 7-day artifact.
+- **release** runs after a successful build on pushes to `master` and manual
+  dispatches (never on pull requests). It verifies the checksum, tags the build
+  `v<version>-r<run_number>`, and publishes a GitHub release whose notes carry
+  the commit changelog since the previous release plus the installed package
+  list. GitHub caps each release asset at 2 GiB, so the ~3.2 GiB ISO is split
+  into `*.part-00`, `*.part-01`, …; the attached `join-zone-iso.sh`
+  reassembles and verifies it:
+
+  ```bash
+  bash join-zone-iso.sh zone-2026.11.25-x86_64.iso
+  ```
 
 Pull requests stop after the profile job: they do not run a privileged
 container build, and the 3.2 GB artifact is only useful for real builds.
@@ -107,8 +143,12 @@ transitive dependency of `xfce4-settings`.
 | `archiso/efiboot/` | systemd-boot entries (UEFI) |
 | `archiso/syslinux/` | syslinux entries (BIOS) |
 | `docker/` | Dockerfile for containerised builds |
-| `.github/workflows/ci.yml` | Profile validation, ISO build, splash payload check |
+| `.github/workflows/ci.yml` | Profile validation, ISO build, package manifest, release |
 | `.github/scripts/check-iso.sh` | Asserts boot entries and initramfs carry the splash |
+| `.github/scripts/iso-packages.sh` | Writes the installed package list from a built ISO |
+| `scripts/capture-screenshots.sh` | Captures the README screenshots under QEMU |
+| `scripts/qmp.py` | QMP client used by the screenshot capture |
+| `docs/screenshots/` | Screenshots embedded in this README |
 | `build.sh` | Docker/native build wrapper |
 
 `zone-live-setup.service` runs `airootfs/usr/local/bin/zone-live-setup` once at

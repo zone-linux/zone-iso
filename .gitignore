@@ -5,3 +5,6 @@ out/
 work/
 *.iso
 *.iso.sha256
+
+# Python bytecode
+__pycache__/
