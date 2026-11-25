@@ -10,6 +10,9 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   profile:
     name: Validate the archiso profile
@@ -28,9 +31,15 @@ jobs:
           bash -n archiso/airootfs/usr/local/bin/zone-live-setup
           bash -n archiso/airootfs/usr/local/bin/post_install
           bash -n archiso/airootfs/usr/local/bin/chrooted_post_install
+          bash -n scripts/capture-screenshots.sh
+          bash -n .github/scripts/iso-packages.sh
 
       - name: shellcheck
-        run: shellcheck -S warning build.sh archiso/airootfs/usr/local/bin/zone-live-setup
+        run: |
+          shellcheck -S warning build.sh \
+            archiso/airootfs/usr/local/bin/zone-live-setup \
+            scripts/capture-screenshots.sh \
+            .github/scripts/iso-packages.sh
 
       - name: Profile consistency
         run: |
@@ -135,6 +144,13 @@ jobs:
           docker run --rm -v "$PWD:/src:ro" zone-builder bash -euo pipefail \
             /src/.github/scripts/check-iso.sh /src/zone-out
 
+      - name: Package manifest
+        run: |
+          docker run --rm -v "$PWD:/src:ro" -v "$PWD/zone-out:/out" zone-builder \
+            bash -euo pipefail /src/.github/scripts/iso-packages.sh /out
+          docker run --rm --network none -v "$PWD/zone-out:/out" zone-builder \
+            chown -R "$(id -u):$(id -g)" /out
+
       - name: Upload the ISO
         uses: actions/upload-artifact@v7
         with:
@@ -142,6 +158,109 @@ jobs:
           path: |
             zone-out/*.iso
             zone-out/*.iso.sha256
+            zone-out/packages.txt
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
+
+  release:
+    name: Publish the ISO release
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: zone-iso-${{ github.sha }}
+          path: dist
+
+      - name: Stage release assets
+        id: stage
+        run: |
+          set -Eeuo pipefail
+          iso="$(find dist -maxdepth 1 -name '*.iso' -type f | sort | tail -1)"
+          [[ -n "$iso" ]] || { echo "no ISO in the artifact" >&2; exit 1; }
+          base="$(basename "$iso")"
+          version="$(sed -E 's/^zone-([0-9.]+)-x86_64\.iso$/\1/' <<<"$base")"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] \
+            || { echo "cannot parse the ISO version from $base" >&2; exit 1; }
+          tag="v${version}-r${GITHUB_RUN_NUMBER}"
+
+          ( cd dist && sha256sum -c "${base}.sha256" )
+
+          sha="$(cut -d' ' -f1 "dist/${base}.sha256")"
+          size="$(numfmt --to=iec --suffix=B "$(stat -c %s "$iso")")"
+          packages="$(wc -l < dist/packages.txt 2>/dev/null || echo '?')"
+
+          # GitHub caps a release asset at 2 GiB; the ISO is roughly 3.2 GiB.
+          split -b 1800M -d -a 2 "$iso" "dist/${base}.part-"
+          rm -f "$iso"
+
+          cat > dist/join-zone-iso.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -Eeuo pipefail
+          [[ $# -eq 1 ]] || { echo "usage: $0 zone-<version>-x86_64.iso" >&2; exit 2; }
+          base="$1"
+          cat "$base".part-* > "$base"
+          sha256sum -c "$base.sha256"
+          EOF
+          chmod +x dist/join-zone-iso.sh
+
+          prev="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
+          {
+            echo "Zone Linux ${version} — live/install ISO built from \`${GITHUB_SHA:0:7}\`."
+            echo
+            echo "- **ISO:** \`${base}\` (${size})"
+            echo "- **SHA-256:** \`${sha}\`"
+            echo "- **Build:** [run ${GITHUB_RUN_NUMBER}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+            echo
+            echo "GitHub limits each release asset to 2 GiB, so the ISO is split."
+            echo "Reassemble and verify it with the attached script:"
+            echo
+            echo '```bash'
+            echo "bash join-zone-iso.sh ${base}"
+            echo '```'
+            echo
+            if [[ -n "$prev" ]]; then
+              echo "### Changes since \`${prev}\`"
+              echo
+              git log --no-merges --pretty="- %s (\`%h\`)" "${prev}..HEAD"
+              echo
+              echo "[Full comparison](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${prev}...${GITHUB_SHA})"
+            else
+              echo "### Changes"
+              echo
+              git log --no-merges -n 30 --pretty="- %s (\`%h\`)"
+            fi
+            echo
+            echo "### Installed packages"
+            echo
+            echo "The full package manifest is attached as \`packages.txt\` (${packages} packages)."
+          } > notes.md
+
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -Eeuo pipefail
+          tag="${{ steps.stage.outputs.tag }}"
+          version="${{ steps.stage.outputs.version }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release delete "$tag" --yes --cleanup-tag
+          fi
+          gh release create "$tag" dist/* \
+            --title "Zone Linux ${version} (build ${GITHUB_RUN_NUMBER})" \
+            --notes-file notes.md \
+            --target "$GITHUB_SHA"
